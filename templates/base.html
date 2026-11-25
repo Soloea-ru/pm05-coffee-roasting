@@ -3,41 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Обжарка{% endblock %} · Кофейная обжарка</title>
+  <title>{% block title %}Сводка{% endblock %} · Жарница</title>
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   {% if me and me.is_admin() %}
+  <a class="skip" href="#content">К содержанию</a>
   <div class="shell">
-    <aside class="rail">
+    <aside class="rail" aria-label="Навигация">
       <a class="brand" href="{{ url_for('main.dashboard') }}">
-        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-mark" aria-hidden="true">Ж</span>
         <span>
-          <strong>Обжарка</strong>
-          <small>учёт зерна и профилей</small>
+          <strong>Жарница</strong>
+          <small>учёт обжарки</small>
         </span>
       </a>
       <nav class="rail-nav" aria-label="Разделы">
-        {% for endpoint, label in nav %}
-          <a href="{{ url_for(endpoint) }}" {% if request.endpoint == endpoint %}aria-current="page"{% endif %}>{{ label }}</a>
+        {% for group_label, items in nav_groups %}
+          <div class="nav-label">{{ group_label }}</div>
+          {% for endpoint, label in items %}
+            <a href="{{ url_for(endpoint) }}" {% if request.endpoint == endpoint %}aria-current="page"{% endif %}>
+              {{ label }}
+              {% if nav_counts.get(endpoint) is not none %}
+                <span class="n">{{ nav_counts[endpoint] }}</span>
+              {% endif %}
+            </a>
+          {% endfor %}
         {% endfor %}
       </nav>
-      <form class="rail-out" method="post" action="{{ url_for('main.logout') }}">
-        {% from "macros.html" import csrf_field %}
-        {{ csrf_field(csrf) }}
-        <p>{{ me.full_name }}</p>
-        <button type="submit">Выйти</button>
-      </form>
+      <div class="side-foot">
+        <b>{{ me.full_name }}</b><br>
+        {% if me.is_admin() %}администратор{% else %}{{ me.role }}{% endif %}
+      </div>
     </aside>
     <div class="stage">
-      <header class="stage-head">
-        <h1>{% block heading %}{% endblock %}</h1>
-        {% block actions %}{% endblock %}
+      <header class="top">
+        <span class="shift">Жарница · учёт обжарки · <b>{{ now_label }}</b></span>
+        <form class="top-tools" method="post" action="{{ url_for('main.logout') }}">
+          {% from "macros.html" import csrf_field %}
+          {{ csrf_field(csrf) }}
+          <button class="ghost" type="submit">Выйти</button>
+        </form>
       </header>
-      {% from "macros.html" import flashes %}
-      {{ flashes() }}
-      <main>
+      <main class="page" id="content">
+        <div class="title-row">
+          <div>
+            <h1>{% block heading %}{% endblock %}</h1>
+            {% block lede %}{% endblock %}
+          </div>
+          <div>{% block actions %}{% endblock %}</div>
+        </div>
+        {% from "macros.html" import flashes %}
+        {{ flashes() }}
         {% block content %}{% endblock %}
       </main>
     </div>

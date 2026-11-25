@@ -1,4 +1,5 @@
 import secrets
+from datetime import datetime
 from pathlib import Path
 
 from flask import (
@@ -34,6 +35,7 @@ from .models import (
     db,
 )
 from .services import (
+    PER_PAGE,
     admin_required,
     current_user,
     delete_stored_file,
@@ -52,23 +54,61 @@ from .validators import (
 
 bp = Blueprint("main", __name__)
 
-NAV = [
-    ("main.dashboard", "Сводка"),
-    ("main.variety_list", "Сорта"),
-    ("main.recipe_list", "Профили и бленды"),
-    ("main.supplier_list", "Поставщики"),
-    ("main.client_list", "Клиенты"),
-    ("main.report_page", "Отчёты"),
-    ("main.document_list", "Архив"),
-    ("main.journal_list", "Журнал"),
+NAV_GROUPS = [
+    (
+        "Производство",
+        [
+            ("main.dashboard", "Сводка"),
+        ],
+    ),
+    (
+        "Справочники",
+        [
+            ("main.variety_list", "Сорта"),
+            ("main.recipe_list", "Профили обжарки"),
+            ("main.supplier_list", "Поставщики"),
+            ("main.client_list", "Клиенты"),
+        ],
+    ),
+    (
+        "Контроль",
+        [
+            ("main.report_page", "Отчёты"),
+            ("main.document_list", "Документы"),
+            ("main.journal_list", "Журнал"),
+        ],
+    ),
 ]
 
 
 def inject_template_context():
+    user = current_user()
+    counts = {}
+    if user and user.is_admin():
+        counts = {
+            "main.variety_list": db.session.execute(
+                select(func.count()).select_from(CoffeeVariety)
+            ).scalar_one(),
+            "main.recipe_list": db.session.execute(
+                select(func.count()).select_from(RoastRecipe)
+            ).scalar_one(),
+            "main.supplier_list": db.session.execute(
+                select(func.count()).select_from(Supplier)
+            ).scalar_one(),
+            "main.client_list": db.session.execute(
+                select(func.count()).select_from(Client)
+            ).scalar_one(),
+            "main.document_list": db.session.execute(
+                select(func.count()).select_from(Document)
+            ).scalar_one(),
+        }
     return {
         "csrf": ensure_csrf(),
-        "me": current_user(),
-        "nav": NAV,
+        "me": user,
+        "nav_groups": NAV_GROUPS,
+        "nav_counts": counts,
+        "now_label": datetime.now().strftime("%d.%m.%Y %H:%M"),
+        "per_page": PER_PAGE,
         "SPECIES": SPECIES,
         "PROCESSING": PROCESSING,
         "ROAST_LEVELS": ROAST_LEVELS,

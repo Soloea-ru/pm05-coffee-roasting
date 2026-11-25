@@ -3,14 +3,17 @@
 {% block heading %}Ошибка {{ code }}{% endblock %}
 {% block public %}
 <main class="login-card">
-  <p class="eyebrow">{{ code }}</p>
+  <div class="login-brand">
+    <span class="brand-mark" aria-hidden="true">Ж</span>
+    <p class="eyebrow">{{ code }}</p>
+  </div>
   <h1>{{ title }}</h1>
-  <p class="lead">{{ message }}</p>
+  <p class="lede">{{ message }}</p>
   <p><a class="btn" href="{{ url_for('main.login') }}">Ко входу</a></p>
   {% if me %}
   <form method="post" action="{{ url_for('main.logout') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf }}">
-    <button type="submit">Выйти</button>
+    <button class="ghost" type="submit">Выйти</button>
   </form>
   {% endif %}
 </main>

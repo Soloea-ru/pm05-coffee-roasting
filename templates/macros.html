@@ -23,13 +23,19 @@
 {% macro pager(endpoint, page, page_count) %}
   {% if page_count > 1 %}
   <nav class="pager" aria-label="Страницы">
-    {% if page > 1 %}
-      <a href="{{ url_for(endpoint, page=page-1, **kwargs) }}">Назад</a>
-    {% endif %}
     <span>стр. {{ page }} из {{ page_count }}</span>
-    {% if page < page_count %}
-      <a href="{{ url_for(endpoint, page=page+1, **kwargs) }}">Дальше</a>
-    {% endif %}
+    <div class="btns">
+      {% if page > 1 %}
+        <a class="ghost" href="{{ url_for(endpoint, page=page-1, **kwargs) }}">Назад</a>
+      {% else %}
+        <button class="ghost" type="button" disabled>Назад</button>
+      {% endif %}
+      {% if page < page_count %}
+        <a class="ghost" href="{{ url_for(endpoint, page=page+1, **kwargs) }}">Дальше</a>
+      {% else %}
+        <button class="ghost" type="button" disabled>Дальше</button>
+      {% endif %}
+    </div>
   </nav>
   {% endif %}
 {% endmacro %}

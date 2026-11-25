@@ -2,38 +2,44 @@
 {% from "macros.html" import pager, empty %}
 {% block title %}Журнал{% endblock %}
 {% block heading %}Журнал действий{% endblock %}
+{% block lede %}
+<p class="lede">Кто, когда, что сделал. {{ total }} записей · страница по {{ per_page }}.</p>
+{% endblock %}
 {% block content %}
-<form class="filters" method="get">
-  <label>
-    Поиск
-    <input type="search" name="q" value="{{ q }}" placeholder="действие, сущность, логин">
-  </label>
-  <button type="submit">Найти</button>
+<form class="filters" method="get" aria-label="Фильтр журнала">
+  <div class="field">
+    <label for="q">Поиск</label>
+    <input id="q" type="search" name="q" value="{{ q }}" placeholder="действие, сущность, логин">
+  </div>
+  <button class="btn" type="submit">Показать</button>
+  <a class="ghost" href="{{ url_for('main.journal_list') }}">Сбросить</a>
 </form>
-<p class="muted">{{ total }} записей</p>
 {% if items %}
-<table>
-  <thead>
-    <tr>
-      <th>Когда</th>
-      <th>Кто</th>
-      <th>Действие</th>
-      <th>Сущность</th>
-      <th>Комментарий</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in items %}
-    <tr>
-      <td>{{ row.created_at | dmy }}</td>
-      <td>{{ row.user.login if row.user else "—" }}</td>
-      <td>{{ row.action }}</td>
-      <td>{{ row.entity }}{% if row.entity_id %} #{{ row.entity_id }}{% endif %}</td>
-      <td>{{ row.details }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-wrap">
+  <table>
+    <caption>Журнал · найдено {{ total }} · показано {{ items|length }}</caption>
+    <thead>
+      <tr>
+        <th>Когда</th>
+        <th>Кто</th>
+        <th>Действие</th>
+        <th>Сущность</th>
+        <th>Комментарий</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in items %}
+      <tr>
+        <td>{{ row.created_at | dmy }}</td>
+        <td>{{ row.user.login if row.user else "—" }}</td>
+        <td>{{ row.action }}</td>
+        <td>{{ row.entity }}{% if row.entity_id %} #{{ row.entity_id }}{% endif %}</td>
+        <td class="wrap">{{ row.details }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {{ pager("main.journal_list", page, pages, q=q) }}
 {% else %}
 {{ empty("Нет записей по этому фильтру.") }}

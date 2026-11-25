@@ -1,20 +1,22 @@
 {% extends "base.html" %}
 {% block title %}Сводка{% endblock %}
 {% block heading %}Сводка обжарочной{% endblock %}
+{% block lede %}
+<p class="lede">Цеховая доска. Справочники зерна и профилей, поставщики, клиенты, архив и журнал.</p>
+{% endblock %}
 {% block content %}
-<p class="lead">Первый срез: справочники зерна и профилей, поставщики зелёного зерна, клиенты, архив документов и журнал действий.</p>
-<ul class="stat-grid">
-  <li><a href="{{ url_for('main.variety_list') }}"><strong>{{ counts.varieties }}</strong><span>сортов</span></a></li>
-  <li><a href="{{ url_for('main.recipe_list') }}"><strong>{{ counts.recipes }}</strong><span>профилей и блендов</span></a></li>
-  <li><a href="{{ url_for('main.supplier_list') }}"><strong>{{ counts.suppliers }}</strong><span>поставщиков</span></a></li>
-  <li><a href="{{ url_for('main.client_list') }}"><strong>{{ counts.clients }}</strong><span>клиентов</span></a></li>
-  <li><a href="{{ url_for('main.document_list') }}"><strong>{{ counts.documents }}</strong><span>документов</span></a></li>
-  <li><a href="{{ url_for('main.journal_list') }}"><strong>{{ counts.actions }}</strong><span>записей журнала</span></a></li>
-</ul>
-<section>
-  <h2>Последние действия</h2>
-  {% if recent %}
+<section class="kpis" aria-label="Счётчики каталогов">
+  <a class="kpi" href="{{ url_for('main.variety_list') }}"><span class="k">Сорта</span><span class="v">{{ counts.varieties }}</span></a>
+  <a class="kpi" href="{{ url_for('main.recipe_list') }}"><span class="k">Профили и бленды</span><span class="v">{{ counts.recipes }}</span></a>
+  <a class="kpi" href="{{ url_for('main.supplier_list') }}"><span class="k">Поставщики</span><span class="v">{{ counts.suppliers }}</span></a>
+  <a class="kpi" href="{{ url_for('main.client_list') }}"><span class="k">Клиенты</span><span class="v">{{ counts.clients }}</span></a>
+  <a class="kpi" href="{{ url_for('main.document_list') }}"><span class="k">Документы</span><span class="v">{{ counts.documents }}</span></a>
+  <a class="kpi" href="{{ url_for('main.journal_list') }}"><span class="k">Журнал</span><span class="v">{{ counts.actions }}</span></a>
+</section>
+{% if recent %}
+<div class="table-wrap">
   <table>
+    <caption>Последние действия</caption>
     <thead>
       <tr><th>Когда</th><th>Действие</th><th>Сущность</th><th>Комментарий</th></tr>
     </thead>
@@ -24,13 +26,13 @@
         <td>{{ row.created_at | dmy }}</td>
         <td>{{ row.action }}</td>
         <td>{{ row.entity }}{% if row.entity_id %} #{{ row.entity_id }}{% endif %}</td>
-        <td>{{ row.details }}</td>
+        <td class="wrap">{{ row.details }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  {% else %}
-  <p class="empty">Журнал пока пуст — войдите и измените справочник.</p>
-  {% endif %}
-</section>
+</div>
+{% else %}
+<p class="empty">Журнал пока пуст — войдите и измените справочник.</p>
+{% endif %}
 {% endblock %}
