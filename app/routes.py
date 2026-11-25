@@ -531,7 +531,7 @@ def supplier_list():
 @bp.route("/admin/suppliers/new", methods=["GET", "POST"])
 @admin_required
 def supplier_new():
-    errors, form = {}, _empty_party()
+    errors, form = {}, _empty_supplier()
     if request.method == "POST":
         errors, form = validate_supplier(request.form)
         if not errors:
@@ -551,7 +551,7 @@ def supplier_new():
 @admin_required
 def supplier_edit(item_id):
     item = db.session.get(Supplier, item_id) or abort(404)
-    errors, form = {}, _party_form(item)
+    errors, form = {}, _supplier_form(item)
     if request.method == "POST":
         errors, form = validate_supplier(request.form)
         if not errors:
@@ -663,7 +663,7 @@ def client_delete(item_id):
     return render_template("confirm_delete.html", item=item, used=0, catalog="клиента")
 
 
-def _empty_party():
+def _empty_supplier():
     return {
         "name": "",
         "country": "",
@@ -675,7 +675,7 @@ def _empty_party():
     }
 
 
-def _party_form(item):
+def _supplier_form(item):
     return {
         "name": item.name,
         "country": item.country,

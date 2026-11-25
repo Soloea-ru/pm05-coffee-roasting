@@ -21,17 +21,17 @@ def mysql_uri():
     explicit = os.environ.get("DATABASE_URL", "").strip()
     if explicit:
         return explicit
-    user = os.environ.get("MYSQL_USER", "kofe")
+    user = os.environ.get("MYSQL_USER", "coffee")
     password = os.environ.get("MYSQL_PASSWORD", "")
     host = os.environ.get("MYSQL_HOST", "127.0.0.1")
     port = os.environ.get("MYSQL_PORT", "3306")
-    name = os.environ.get("MYSQL_DATABASE", "kofe_obzharka")
+    name = os.environ.get("MYSQL_DATABASE", "coffee_roasting")
     auth = user if not password else f"{user}:{quote_plus(password)}"
     return f"mysql+pymysql://{auth}@{host}:{port}/{name}?charset=utf8mb4"
 
 
 class Config:
-    SECRET_KEY = os.environ.get("SECRET_KEY", "kofe-obzharka-dev-key")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "coffee-roasting-dev-key")
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     SQLALCHEMY_TRACK_MODIFICATIONS = False

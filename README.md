@@ -28,21 +28,21 @@ python3 -m venv .venv
 Если MySQL уже стоит локально, создайте базу и пропишите её в `.env`:
 
 ```sql
-CREATE DATABASE kofe_obzharka CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE coffee_roasting CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 ```
 MYSQL_HOST=127.0.0.1
 MYSQL_PORT=3306
-MYSQL_USER=kofe
-MYSQL_PASSWORD=kofe
-MYSQL_DATABASE=kofe_obzharka
+MYSQL_USER=coffee
+MYSQL_PASSWORD=coffee
+MYSQL_DATABASE=coffee_roasting
 ```
 
 Либо одной строкой (`DATABASE_URL` важнее отдельных `MYSQL_*`):
 
 ```
-DATABASE_URL=mysql+pymysql://kofe:ПАРОЛЬ@127.0.0.1:3306/kofe_obzharka?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://coffee:ПАРОЛЬ@127.0.0.1:3306/coffee_roasting?charset=utf8mb4
 ```
 
 Пустую базу приложение само дополнит таблицами и учебными записями при первом запуске.
@@ -61,7 +61,7 @@ py -3 -m venv .venv
 
 | Логин | Пароль | Роль |
 | --- | --- | --- |
-| admin | KofeAdmin123! | администратор |
+| admin | CoffeeAdmin123! | администратор |
 | guest | Guest123! | только просмотр запрещён (проверка роли) |
 
 ## Экраны

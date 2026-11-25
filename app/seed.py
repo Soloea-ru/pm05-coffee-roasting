@@ -22,7 +22,7 @@ def seed_demo(upload_folder: Path):
 
     admin = User(
         login="admin",
-        password_hash=generate_password_hash("KofeAdmin123!", method="pbkdf2:sha256"),
+        password_hash=generate_password_hash("CoffeeAdmin123!", method="pbkdf2:sha256"),
         full_name="Анна Обжарова",
         role="admin",
     )
@@ -186,7 +186,7 @@ def seed_demo(upload_folder: Path):
                 city="Москва",
                 contact_name="Павел Седов",
                 phone="+7 495 100-20-30",
-                email="green@zerno-sever.example",
+                email="green@north-beans.example",
                 specialty="Импорт микролотов Эфиопии и Кении",
             ),
             Supplier(

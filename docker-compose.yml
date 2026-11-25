@@ -1,18 +1,18 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: kofe-obzharka-mysql
+    container_name: coffee-roasting-mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: kofe_obzharka
-      MYSQL_USER: kofe
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-kofe}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-koferoot}
+      MYSQL_DATABASE: coffee_roasting
+      MYSQL_USER: coffee
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-coffee}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-coffeeroot}
     ports:
       - "3306:3306"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - kofe_obzharka_mysql:/var/lib/mysql
+      - coffee_roasting_mysql:/var/lib/mysql
 
 volumes:
-  kofe_obzharka_mysql:
+  coffee_roasting_mysql:

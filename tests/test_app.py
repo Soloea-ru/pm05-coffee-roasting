@@ -22,7 +22,7 @@ class ConfigTests(unittest.TestCase):
             "MYSQL_PASSWORD": "ignored",
             "MYSQL_HOST": "127.0.0.1",
             "MYSQL_PORT": "3306",
-            "MYSQL_DATABASE": "kofe_obzharka",
+            "MYSQL_DATABASE": "coffee_roasting",
         }
         with patch.dict(os.environ, env, clear=False):
             self.assertEqual(mysql_uri(), env["DATABASE_URL"])
@@ -30,16 +30,16 @@ class ConfigTests(unittest.TestCase):
     def test_mysql_password_is_url_quoted(self):
         env = {
             "DATABASE_URL": "",
-            "MYSQL_USER": "kofe",
+            "MYSQL_USER": "coffee",
             "MYSQL_PASSWORD": "p@ss:w/rd",
             "MYSQL_HOST": "127.0.0.1",
             "MYSQL_PORT": "3306",
-            "MYSQL_DATABASE": "kofe_obzharka",
+            "MYSQL_DATABASE": "coffee_roasting",
         }
         with patch.dict(os.environ, env, clear=False):
             self.assertEqual(
                 mysql_uri(),
-                "mysql+pymysql://kofe:p%40ss%3Aw%2Frd@127.0.0.1:3306/kofe_obzharka?charset=utf8mb4",
+                "mysql+pymysql://coffee:p%40ss%3Aw%2Frd@127.0.0.1:3306/coffee_roasting?charset=utf8mb4",
             )
 
 
@@ -94,14 +94,14 @@ class FlowTests(unittest.TestCase):
         fields["csrf_token"] = self.csrf()
         return self.client.post(url, data=fields, follow_redirects=False)
 
-    def login(self, login="admin", password="KofeAdmin123!"):
+    def login(self, login="admin", password="CoffeeAdmin123!"):
         return self.post("/login", login=login, password=password)
 
     def test_password_is_pbkdf2(self):
         with self.app.app_context():
             user = db.session.execute(select(User).where(User.login == "admin")).scalar_one()
             self.assertTrue(user.password_hash.startswith("pbkdf2:sha256"))
-            self.assertTrue(check_password_hash(user.password_hash, "KofeAdmin123!"))
+            self.assertTrue(check_password_hash(user.password_hash, "CoffeeAdmin123!"))
 
     def test_login_form_includes_csrf_token(self):
         response = self.client.get("/login")
