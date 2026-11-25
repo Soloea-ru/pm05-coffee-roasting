@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ code }}{% endblock %}
+{% block heading %}Ошибка {{ code }}{% endblock %}
+{% block public %}
+<main class="login-card">
+  <p class="eyebrow">{{ code }}</p>
+  <h1>{{ title }}</h1>
+  <p class="lead">{{ message }}</p>
+  <p><a class="btn" href="{{ url_for('main.login') }}">Ко входу</a></p>
+  {% if me %}
+  <form method="post" action="{{ url_for('main.logout') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf }}">
+    <button type="submit">Выйти</button>
+  </form>
+  {% endif %}
+</main>
+{% endblock %}
+{% block content %}
+<p>{{ message }}</p>
+<p><a class="btn" href="{{ url_for('main.dashboard') }}">К сводке</a></p>
+{% endblock %}

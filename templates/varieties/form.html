@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf_field, field_error %}
+{% block title %}{{ "Сорт" if item else "Новый сорт" }}{% endblock %}
+{% block heading %}{{ "Редактировать сорт" if item else "Новый сорт" }}{% endblock %}
+{% block content %}
+<form method="post" class="stack" novalidate>
+  {{ csrf_field(csrf) }}
+  <label for="name">Название</label>
+  <input id="name" name="name" value="{{ form.name }}" required maxlength="120">
+  {{ field_error(errors, "name") }}
+
+  <div class="split">
+    <div>
+      <label for="species">Вид</label>
+      <select id="species" name="species">
+        {% for key, label in SPECIES.items() %}
+          <option value="{{ key }}" {% if form.species == key %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {{ field_error(errors, "species") }}
+    </div>
+    <div>
+      <label for="processing">Обработка</label>
+      <select id="processing" name="processing">
+        {% for key, label in PROCESSING.items() %}
+          <option value="{{ key }}" {% if form.processing == key %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {{ field_error(errors, "processing") }}
+    </div>
+  </div>
+
+  <div class="split">
+    <div>
+      <label for="origin_country">Страна</label>
+      <input id="origin_country" name="origin_country" value="{{ form.origin_country }}" required>
+      {{ field_error(errors, "origin_country") }}
+    </div>
+    <div>
+      <label for="region">Регион</label>
+      <input id="region" name="region" value="{{ form.region }}">
+      {{ field_error(errors, "region") }}
+    </div>
+  </div>
+
+  <label for="farm">Ферма / кооператив / станция</label>
+  <input id="farm" name="farm" value="{{ form.farm }}">
+  {{ field_error(errors, "farm") }}
+
+  <div class="split">
+    <div>
+      <label for="altitude_m">Высота, м</label>
+      <input id="altitude_m" name="altitude_m" type="number" min="0" max="3500" value="{{ form.altitude_m or '' }}">
+      {{ field_error(errors, "altitude_m") }}
+    </div>
+    <div>
+      <label for="sca_score">Оценка SCA</label>
+      <input id="sca_score" name="sca_score" type="number" min="0" max="100" step="0.25" value="{{ form.sca_score or '' }}">
+      {{ field_error(errors, "sca_score") }}
+    </div>
+  </div>
+
+  <label for="flavor_notes">Вкусовой профиль</label>
+  <input id="flavor_notes" name="flavor_notes" value="{{ form.flavor_notes }}" maxlength="240">
+  {{ field_error(errors, "flavor_notes") }}
+
+  <button type="submit">Сохранить</button>
+  <a class="btn ghost" href="{{ url_for('main.variety_list') }}">К списку</a>
+</form>
+{% endblock %}

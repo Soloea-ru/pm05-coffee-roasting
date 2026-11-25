@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "macros.html" import pager, empty %}
+{% block title %}Журнал{% endblock %}
+{% block heading %}Журнал действий{% endblock %}
+{% block content %}
+<form class="filters" method="get">
+  <label>
+    Поиск
+    <input type="search" name="q" value="{{ q }}" placeholder="действие, сущность, логин">
+  </label>
+  <button type="submit">Найти</button>
+</form>
+<p class="muted">{{ total }} записей</p>
+{% if items %}
+<table>
+  <thead>
+    <tr>
+      <th>Когда</th>
+      <th>Кто</th>
+      <th>Действие</th>
+      <th>Сущность</th>
+      <th>Комментарий</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in items %}
+    <tr>
+      <td>{{ row.created_at | dmy }}</td>
+      <td>{{ row.user.login if row.user else "—" }}</td>
+      <td>{{ row.action }}</td>
+      <td>{{ row.entity }}{% if row.entity_id %} #{{ row.entity_id }}{% endif %}</td>
+      <td>{{ row.details }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pager("main.journal_list", page, pages, q=q) }}
+{% else %}
+{{ empty("Нет записей по этому фильтру.") }}
+{% endif %}
+{% endblock %}

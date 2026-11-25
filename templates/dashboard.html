@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Сводка{% endblock %}
+{% block heading %}Сводка обжарочной{% endblock %}
+{% block content %}
+<p class="lead">Первый срез: справочники зерна и профилей, поставщики зелёного зерна, клиенты, архив документов и журнал действий.</p>
+<ul class="stat-grid">
+  <li><a href="{{ url_for('main.variety_list') }}"><strong>{{ counts.varieties }}</strong><span>сортов</span></a></li>
+  <li><a href="{{ url_for('main.recipe_list') }}"><strong>{{ counts.recipes }}</strong><span>профилей и блендов</span></a></li>
+  <li><a href="{{ url_for('main.supplier_list') }}"><strong>{{ counts.suppliers }}</strong><span>поставщиков</span></a></li>
+  <li><a href="{{ url_for('main.client_list') }}"><strong>{{ counts.clients }}</strong><span>клиентов</span></a></li>
+  <li><a href="{{ url_for('main.document_list') }}"><strong>{{ counts.documents }}</strong><span>документов</span></a></li>
+  <li><a href="{{ url_for('main.journal_list') }}"><strong>{{ counts.actions }}</strong><span>записей журнала</span></a></li>
+</ul>
+<section>
+  <h2>Последние действия</h2>
+  {% if recent %}
+  <table>
+    <thead>
+      <tr><th>Когда</th><th>Действие</th><th>Сущность</th><th>Комментарий</th></tr>
+    </thead>
+    <tbody>
+      {% for row in recent %}
+      <tr>
+        <td>{{ row.created_at | dmy }}</td>
+        <td>{{ row.action }}</td>
+        <td>{{ row.entity }}{% if row.entity_id %} #{{ row.entity_id }}{% endif %}</td>
+        <td>{{ row.details }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty">Журнал пока пуст — войдите и измените справочник.</p>
+  {% endif %}
+</section>
+{% endblock %}

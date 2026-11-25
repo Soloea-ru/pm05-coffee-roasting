@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf_field %}
+{% block title %}Удаление{% endblock %}
+{% block heading %}Удалить {{ catalog }}{% endblock %}
+{% block content %}
+{% set label = item.title if item.__tablename__ == 'documents' else item.name %}
+<p>Удалить «{{ label }}»? Это действие нельзя отменить.</p>
+{% if used %}
+<p class="field-error">Запись используется в {{ used }} рецептур(ах). Сначала уберите её из состава.</p>
+{% else %}
+<form method="post">
+  {{ csrf_field(csrf) }}
+  <button type="submit" class="danger">Удалить</button>
+  <a class="btn ghost" href="{{ url_for('main.dashboard') }}">Отмена</a>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Обжарка{% endblock %} · Кофейная обжарка</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% if me and me.is_admin() %}
+  <div class="shell">
+    <aside class="rail">
+      <a class="brand" href="{{ url_for('main.dashboard') }}">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>
+          <strong>Обжарка</strong>
+          <small>учёт зерна и профилей</small>
+        </span>
+      </a>
+      <nav class="rail-nav" aria-label="Разделы">
+        {% for endpoint, label in nav %}
+          <a href="{{ url_for(endpoint) }}" {% if request.endpoint == endpoint %}aria-current="page"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+      <form class="rail-out" method="post" action="{{ url_for('main.logout') }}">
+        {% from "macros.html" import csrf_field %}
+        {{ csrf_field(csrf) }}
+        <p>{{ me.full_name }}</p>
+        <button type="submit">Выйти</button>
+      </form>
+    </aside>
+    <div class="stage">
+      <header class="stage-head">
+        <h1>{% block heading %}{% endblock %}</h1>
+        {% block actions %}{% endblock %}
+      </header>
+      {% from "macros.html" import flashes %}
+      {{ flashes() }}
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  {% else %}
+    {% block public %}{% endblock %}
+  {% endif %}
+</body>
+</html>

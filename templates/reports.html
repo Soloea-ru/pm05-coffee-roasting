@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Отчёты{% endblock %}
+{% block heading %}Сводные отчёты{% endblock %}
+{% block content %}
+<p class="lead">Счётчики по каталогам: происхождение зерна, степень обжарки, типы клиентов и география поставщиков зелёного зерна.</p>
+<div class="report-grid">
+  <section>
+    <h2>Сорта по странам</h2>
+    <p class="muted">Всего {{ variety_total }}</p>
+    <table>
+      <thead><tr><th>Страна</th><th>Сортов</th></tr></thead>
+      <tbody>
+        {% for country, n in origin_rows %}
+        <tr><td>{{ country }}</td><td>{{ n }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Профили по степени</h2>
+    <p class="muted">Всего {{ recipe_total }}; сумма образцов {{ batch_sum | num }} кг</p>
+    <table>
+      <thead><tr><th>Степень</th><th>Рецептур</th></tr></thead>
+      <tbody>
+        {% for level, n in roast_rows %}
+        <tr><td>{{ ROAST_LEVELS.get(level, level) }}</td><td>{{ n }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <ul class="chips">
+      {% for kind, n in kind_rows %}
+        <li>{{ RECIPE_KINDS.get(kind, kind) }}: {{ n }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section>
+    <h2>Поставщики</h2>
+    <p class="muted">Всего {{ supplier_total }}</p>
+    <table>
+      <thead><tr><th>Страна</th><th>Поставщиков</th></tr></thead>
+      <tbody>
+        {% for country, n in supplier_rows %}
+        <tr><td>{{ country }}</td><td>{{ n }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <section>
+    <h2>Клиенты по типу</h2>
+    <p class="muted">Всего {{ client_total }}</p>
+    <table>
+      <thead><tr><th>Тип</th><th>Клиентов</th></tr></thead>
+      <tbody>
+        {% for kind, n in client_rows %}
+        <tr><td>{{ CLIENT_KINDS.get(kind, kind) }}</td><td>{{ n }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Нет данных</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+{% endblock %}

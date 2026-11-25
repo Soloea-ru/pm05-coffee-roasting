@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import pager, empty %}
+{% block title %}Сорта кофе{% endblock %}
+{% block heading %}Сорта зелёного кофе{% endblock %}
+{% block actions %}
+<a class="btn" href="{{ url_for('main.variety_new') }}">Добавить сорт</a>
+{% endblock %}
+{% block content %}
+<form class="filters" method="get">
+  <label>Поиск
+    <input type="search" name="q" value="{{ q }}" placeholder="название, регион, дескрипторы">
+  </label>
+  <label>Страна
+    <select name="country">
+      <option value="">Все</option>
+      {% for item in countries %}
+        <option value="{{ item }}" {% if country == item %}selected{% endif %}>{{ item }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Фильтр</button>
+</form>
+<p class="muted">{{ total }} записей</p>
+{% if items %}
+<table>
+  <thead>
+    <tr>
+      <th>Сорт</th>
+      <th>Происхождение</th>
+      <th>Обработка</th>
+      <th>SCA</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in items %}
+    <tr>
+      <td>
+        <strong>{{ row.name }}</strong>
+        <div class="muted">{{ SPECIES.get(row.species, row.species) }} · {{ row.flavor_notes or "—" }}</div>
+      </td>
+      <td>{{ row.origin_country }}{% if row.region %}, {{ row.region }}{% endif %}</td>
+      <td>{{ PROCESSING.get(row.processing, row.processing) }}</td>
+      <td>{{ row.sca_score | num }}</td>
+      <td class="row-actions">
+        <a href="{{ url_for('main.variety_edit', item_id=row.id) }}">Изменить</a>
+        <a href="{{ url_for('main.variety_delete', item_id=row.id) }}">Удалить</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pager("main.variety_list", page, pages, q=q, country=country) }}
+{% else %}
+{{ empty("Сортов по фильтру нет.") }}
+{% endif %}
+{% endblock %}

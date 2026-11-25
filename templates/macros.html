@@ -1,0 +1,39 @@
+{% macro csrf_field(token) %}
+<input type="hidden" name="csrf_token" value="{{ token }}">
+{% endmacro %}
+
+{% macro flashes() %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for category, text in messages %}
+        <li class="flash flash-{{ category }}">{{ text }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% endmacro %}
+
+{% macro field_error(errors, name) %}
+  {% if errors.get(name) %}
+    <p class="field-error" id="err-{{ name }}">{{ errors[name] }}</p>
+  {% endif %}
+{% endmacro %}
+
+{% macro pager(endpoint, page, page_count) %}
+  {% if page_count > 1 %}
+  <nav class="pager" aria-label="Страницы">
+    {% if page > 1 %}
+      <a href="{{ url_for(endpoint, page=page-1, **kwargs) }}">Назад</a>
+    {% endif %}
+    <span>стр. {{ page }} из {{ page_count }}</span>
+    {% if page < page_count %}
+      <a href="{{ url_for(endpoint, page=page+1, **kwargs) }}">Дальше</a>
+    {% endif %}
+  </nav>
+  {% endif %}
+{% endmacro %}
+
+{% macro empty(text) %}
+  <p class="empty">{{ text }}</p>
+{% endmacro %}

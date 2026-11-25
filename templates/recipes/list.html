@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "macros.html" import pager, empty %}
+{% block title %}Профили и бленды{% endblock %}
+{% block heading %}Рецептуры обжарки{% endblock %}
+{% block actions %}
+<a class="btn" href="{{ url_for('main.recipe_new') }}">Новая рецептура</a>
+{% endblock %}
+{% block content %}
+<form class="filters" method="get">
+  <label>Поиск
+    <input type="search" name="q" value="{{ q }}" placeholder="название или заметка">
+  </label>
+  <label>Степень
+    <select name="roast_level">
+      <option value="">Все</option>
+      {% for key, label in ROAST_LEVELS.items() %}
+        <option value="{{ key }}" {% if roast_level == key %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Фильтр</button>
+</form>
+<p class="muted">{{ total }} записей</p>
+{% if items %}
+<table>
+  <thead>
+    <tr>
+      <th>Рецептура</th>
+      <th>Профиль</th>
+      <th>Состав</th>
+      <th>Образец</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in items %}
+    <tr>
+      <td>
+        <strong>{{ row.name }}</strong>
+        <div class="muted">{{ RECIPE_KINDS.get(row.kind, row.kind) }}</div>
+      </td>
+      <td>
+        {{ ROAST_LEVELS.get(row.roast_level, row.roast_level) }}<br>
+        <span class="muted">{{ row.charge_temp_c }}→{{ row.drop_temp_c }} °C · {{ row.duration_sec | mmss }} · D {{ row.development_pct }}%</span>
+      </td>
+      <td>{{ composition_label(row) }}</td>
+      <td>{{ row.sample_batch_kg | num }} кг</td>
+      <td class="row-actions">
+        <a href="{{ url_for('main.recipe_edit', item_id=row.id) }}">Изменить</a>
+        <a href="{{ url_for('main.recipe_delete', item_id=row.id) }}">Удалить</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pager("main.recipe_list", page, pages, q=q, roast_level=roast_level) }}
+{% else %}
+{{ empty("Рецептур по фильтру нет.") }}
+{% endif %}
+{% endblock %}

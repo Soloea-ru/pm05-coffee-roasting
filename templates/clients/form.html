@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf_field, field_error %}
+{% block title %}{{ "Клиент" if item else "Новый клиент" }}{% endblock %}
+{% block heading %}{{ "Редактировать клиента" if item else "Новый клиент" }}{% endblock %}
+{% block content %}
+<form method="post" class="stack" novalidate>
+  {{ csrf_field(csrf) }}
+  <label for="name">Название</label>
+  <input id="name" name="name" value="{{ form.name }}" required>
+  {{ field_error(errors, "name") }}
+  <div class="split">
+    <div>
+      <label for="kind">Тип</label>
+      <select id="kind" name="kind">
+        {% for key, label in CLIENT_KINDS.items() %}
+          <option value="{{ key }}" {% if form.kind == key %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {{ field_error(errors, "kind") }}
+    </div>
+    <div>
+      <label for="city">Город</label>
+      <input id="city" name="city" value="{{ form.city }}" required>
+      {{ field_error(errors, "city") }}
+    </div>
+  </div>
+  <label for="contact_name">Контактное лицо</label>
+  <input id="contact_name" name="contact_name" value="{{ form.contact_name }}">
+  {{ field_error(errors, "contact_name") }}
+  <div class="split">
+    <div>
+      <label for="phone">Телефон</label>
+      <input id="phone" name="phone" value="{{ form.phone }}">
+      {{ field_error(errors, "phone") }}
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="{{ form.email }}">
+      {{ field_error(errors, "email") }}
+    </div>
+  </div>
+  <label for="notes">Заметки по поставкам</label>
+  <input id="notes" name="notes" value="{{ form.notes }}">
+  {{ field_error(errors, "notes") }}
+  <button type="submit">Сохранить</button>
+  <a class="btn ghost" href="{{ url_for('main.client_list') }}">К списку</a>
+</form>
+{% endblock %}

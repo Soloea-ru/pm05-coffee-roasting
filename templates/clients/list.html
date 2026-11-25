@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import pager, empty %}
+{% block title %}Клиенты{% endblock %}
+{% block heading %}Клиенты обжарочной{% endblock %}
+{% block actions %}
+<a class="btn" href="{{ url_for('main.client_new') }}">Добавить клиента</a>
+{% endblock %}
+{% block content %}
+<form class="filters" method="get">
+  <label>Поиск
+    <input type="search" name="q" value="{{ q }}" placeholder="название, город, заметка">
+  </label>
+  <label>Тип
+    <select name="kind">
+      <option value="">Все</option>
+      {% for key, label in CLIENT_KINDS.items() %}
+        <option value="{{ key }}" {% if kind == key %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Фильтр</button>
+</form>
+<p class="muted">{{ total }} записей</p>
+{% if items %}
+<table>
+  <thead>
+    <tr>
+      <th>Клиент</th>
+      <th>Тип</th>
+      <th>Город</th>
+      <th>Контакт</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in items %}
+    <tr>
+      <td>
+        <strong>{{ row.name }}</strong>
+        <div class="muted">{{ row.notes or "—" }}</div>
+      </td>
+      <td>{{ CLIENT_KINDS.get(row.kind, row.kind) }}</td>
+      <td>{{ row.city }}</td>
+      <td>{{ row.contact_name or "—" }}<br><span class="muted">{{ row.email or row.phone or "" }}</span></td>
+      <td class="row-actions">
+        <a href="{{ url_for('main.client_edit', item_id=row.id) }}">Изменить</a>
+        <a href="{{ url_for('main.client_delete', item_id=row.id) }}">Удалить</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pager("main.client_list", page, pages, q=q, kind=kind) }}
+{% else %}
+{{ empty("Клиентов по фильтру нет.") }}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf_field, field_error %}
+{% block title %}{{ "Поставщик" if item else "Новый поставщик" }}{% endblock %}
+{% block heading %}{{ "Редактировать поставщика" if item else "Новый поставщик" }}{% endblock %}
+{% block content %}
+<form method="post" class="stack" novalidate>
+  {{ csrf_field(csrf) }}
+  <label for="name">Название</label>
+  <input id="name" name="name" value="{{ form.name }}" required>
+  {{ field_error(errors, "name") }}
+  <div class="split">
+    <div>
+      <label for="country">Страна</label>
+      <input id="country" name="country" value="{{ form.country }}" required>
+      {{ field_error(errors, "country") }}
+    </div>
+    <div>
+      <label for="city">Город</label>
+      <input id="city" name="city" value="{{ form.city }}">
+      {{ field_error(errors, "city") }}
+    </div>
+  </div>
+  <label for="contact_name">Контактное лицо</label>
+  <input id="contact_name" name="contact_name" value="{{ form.contact_name }}">
+  {{ field_error(errors, "contact_name") }}
+  <div class="split">
+    <div>
+      <label for="phone">Телефон</label>
+      <input id="phone" name="phone" value="{{ form.phone }}">
+      {{ field_error(errors, "phone") }}
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="{{ form.email }}">
+      {{ field_error(errors, "email") }}
+    </div>
+  </div>
+  <label for="specialty">Специализация (лоты, обработка, регион)</label>
+  <input id="specialty" name="specialty" value="{{ form.specialty }}">
+  {{ field_error(errors, "specialty") }}
+  <button type="submit">Сохранить</button>
+  <a class="btn ghost" href="{{ url_for('main.supplier_list') }}">К списку</a>
+</form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "macros.html" import csrf_field, field_error %}
+{% block title %}{{ "Документ" if item else "Загрузка" }}{% endblock %}
+{% block heading %}{{ "Карточка документа" if item else "Загрузить документ" }}{% endblock %}
+{% block content %}
+<form method="post" class="stack" enctype="multipart/form-data" novalidate>
+  {{ csrf_field(csrf) }}
+  <label for="title">Название</label>
+  <input id="title" name="title" value="{{ form.title }}" required>
+  {{ field_error(errors, "title") }}
+  <label for="category">Категория</label>
+  <select id="category" name="category">
+    {% for key, label in DOCUMENT_CATEGORIES.items() %}
+      <option value="{{ key }}" {% if form.category == key %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  {{ field_error(errors, "category") }}
+  <label for="file">Файл {% if item %}(оставьте пустым, чтобы не менять){% endif %}</label>
+  <input id="file" name="file" type="file" {% if not item %}required{% endif %}>
+  {{ field_error(errors, "file") }}
+  {% if item %}
+  <p class="muted">Сейчас: {{ item.original_name }}</p>
+  {% endif %}
+  <button type="submit">Сохранить</button>
+  <a class="btn ghost" href="{{ url_for('main.document_list') }}">К архиву</a>
+</form>
+{% endblock %}
